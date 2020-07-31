@@ -17,19 +17,28 @@ local nfs = require "nativefs"
 local lg = love.graphics
 
 local function checkOS()
-  local os = love.system.getOS( )
+  local os = love.system.getOS()
+  -- The engine version needs to be configurable
+  local engine = '103.0'
+  -- This is one I have currently installed
+  -- local engine = '104.0.1-1486-gf266c81 maintenance'
+  local executable
+  -- Using system installs can cause issues with different game installs.
+  -- Prefer to bundle everything yourself
   if os == "Windows" then
     lobby.springFilePath = lfs.getUserDirectory() .. 'Documents\\My Games\\Spring\\'
-    lobby.engineFolder = lobby.springFilePath .. "engine\\"
-    lobby.exeFilePath = lobby.engineFolder .. "103.0\\spring.exe"
-    lobby.gameFolder = lobby.springFilePath .. "games\\"
-    lobby.mapFolder = lobby.springFilePath .. "maps\\"
+    executable = 'spring.exe'
   elseif os == "Linux" then
+    lobby.springFilePath = lfs.getUserDirectory() .. '.config/spring/'
+    executable = 'spring'
   elseif os == "OS X" then
-    
   else
     error("Operating System not recognised")
   end
+  lobby.engineFolder = lobby.springFilePath .. "engine/" .. engine .. "/"
+  lobby.exeFilePath = lobby.engineFolder .. executable
+  lobby.gameFolder = lobby.springFilePath .. "games/"
+  lobby.mapFolder = lobby.springFilePath .. "maps/"
 end
 
 function love.load()
